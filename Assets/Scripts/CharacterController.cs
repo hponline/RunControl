@@ -37,9 +37,10 @@ public class CharacterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "X2" || other.name == "+3" || other.name == "-4" || other.name == "/2")
+        if (other.CompareTag("Toplama") || other.CompareTag("Cikarma") || other.CompareTag("Carpma") || other.CompareTag("Bolme"))
         {
-            gameManager.AgentSpawnManager(other.name, other.transform);            
+            int number = int.Parse(other.name); // Objenin string ismini sayýya çevirir
+            gameManager.AgentSpawnManager(other.tag, number, other.transform);            
         }
     }
 }

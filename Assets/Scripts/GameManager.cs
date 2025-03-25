@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Arithmetich;
 
 public class GameManager : MonoBehaviour
 {
@@ -31,136 +32,28 @@ public class GameManager : MonoBehaviour
 
 
     // NPC SPAWN
-    public void AgentSpawnManager(string data, Transform position)
+    public void AgentSpawnManager(string stringData, int intData, Transform position)
     {
-        switch (data)
+        switch (stringData)
         {
-            // Çarpma
-            case "X2":
-                int number = 0;
-                foreach (var agent in agentObjectPool)
-                {
-                    if (number < currentSpawnCount)
-                    {
-                        if (!agent.activeInHierarchy)
-                        {
-                            agent.transform.position = position.transform.position;
-                            agent.SetActive(true);
-                            number++;
-                        }
-                    }
-                    else
-                    {
-                        number = 0;
-                        break;
-                    }
-                }
-                currentSpawnCount *= 2;
-                break;
-
-            // Arttýrma
-            case "+3":
-                int number1 = 0;
-                foreach (var agent in agentObjectPool)
-                {
-                    if (number1 < 3)
-                    {
-                        if (!agent.activeInHierarchy)
-                        {
-                            agent.transform.position = position.transform.position;
-                            agent.SetActive(true);
-                            number1++;
-                        }
-                    }
-                    else
-                    {
-                        number1 = 0;
-                        break;
-                    }
-                }
-                currentSpawnCount += 3;
+            // Toplama
+            case "Toplama":
+                ArithmeticOperation.Toplama(intData, agentObjectPool, position);
                 break;
 
             // Çýkarma
-            case "-4":
-
-                // Mevcut sayýdan küçük mü diye kontrol ediyoruz
-                if (currentSpawnCount < 4)
-                {
-                    foreach (var agent in agentObjectPool)
-                    {
-                        agent.transform.position = Vector3.zero;
-                        agent.SetActive(false);
-                    }
-                    currentSpawnCount = 1; // Main Karakterimiz
-                }
-                else
-                {
-                    int number2 = 0;
-                    foreach (var agent in agentObjectPool)
-                    {
-                        if (number2 != 4)
-                        {
-                            if (agent.activeInHierarchy)
-                            {
-                                agent.transform.position = Vector3.zero;
-                                agent.SetActive(false);
-                                number2++;
-                            }
-                        }
-                        else
-                        {
-                            number2 = 0;
-                            break;
-                        }
-                    }
-                    currentSpawnCount -= 4;
-                }
+            case "Cikarma":
+                ArithmeticOperation.Cikarma(intData, agentObjectPool);
                 break;
 
-            // Bölme
-            case "/2":
+            // Çarpma
+            case "Carpma":
+                ArithmeticOperation.Carpma(intData, agentObjectPool, position);
+                break;         
 
-                // 2 den aþaðýsý bölünebiliyorsa hepsini false yapar
-                if (currentSpawnCount <= 2)
-                {
-                    foreach (var agent in agentObjectPool)
-                    {
-                        agent.transform.position = Vector3.zero;
-                        agent.SetActive(false);
-                    }
-                    currentSpawnCount = 1; // Main Karakterimiz
-                }
-                else
-                {
-                    int division = currentSpawnCount / 2; // Bölme sayýsý kadar döngü
-                    int number2 = 0;
-                    foreach (var agent in agentObjectPool)
-                    {
-                        if (number2 != division)
-                        {
-                            if (agent.activeInHierarchy)
-                            {
-                                agent.transform.position = Vector3.zero;
-                                agent.SetActive(false);
-                                number2++;
-                            }
-                        }
-                        else
-                        {
-                            number2 = 0;
-                            break;
-                        }
-                    }
-                    // Asal sayý kontrol
-                    if (currentSpawnCount % 2 == 0)                    
-                        currentSpawnCount /=2;
-                    else
-                    {
-                        currentSpawnCount /= 2;
-                        currentSpawnCount++;
-                    }
-                }
+            // Bölme
+            case "Bolme":
+                ArithmeticOperation.Bolme(intData, agentObjectPool);
                 break;
         }
         ShowCurrentSpawnCount();

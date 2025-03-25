@@ -6,6 +6,10 @@ TagManager:
   tags:
   - GameManager
   - Enemy
+  - Toplama
+  - Cikarma
+  - Bolme
+  - Carpma
   layers:
   - Default
   - TransparentFX
