@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.PlayerSettings;
 
 
 namespace Arithmetich
@@ -10,7 +11,7 @@ namespace Arithmetich
     {
 
 
-        public static void Toplama(int intData, List<GameObject> agentObjectPool, Transform position)
+        public static void Toplama(int intData, List<GameObject> agentObjectPool, Transform position, List<GameObject> spawnNpcParticles)
         {
             int number = 0;
             foreach (var agent in agentObjectPool)
@@ -19,6 +20,17 @@ namespace Arithmetich
                 {
                     if (!agent.activeInHierarchy)
                     {
+                        foreach (var deadParticle in spawnNpcParticles) // npc ölüm particle effect
+                        {
+                            if (!deadParticle.activeInHierarchy)
+                            {
+                                deadParticle.SetActive(true);
+                                deadParticle.transform.position = position.transform.position;
+                                deadParticle.GetComponent<ParticleSystem>().Play();
+                                break;
+                            }
+                        }
+
                         agent.transform.position = position.transform.position;
                         agent.SetActive(true);
                         number++;
@@ -32,13 +44,65 @@ namespace Arithmetich
             }
             GameManager.currentSpawnCount += intData;            
         }
+        public static void Carpma(int intData, List<GameObject> agentObjectPool, Transform position, List<GameObject> spawnNpcParticles)
+        {
+            int numberOfCycles = (GameManager.currentSpawnCount * intData) - GameManager.currentSpawnCount;
+            /*                                      10          *    3    -            =20
+             * Gelen (number) sayýyý mevcut npc (currentSpawnCount) sayýmýz ile çarpýyoruz,
+             * Sonra mevcut npc sayýmýzý çýkarýyoruz,
+             * Bu sayý bize kaç defa döngüye girmemizi veriyor.
+             */
+            int number = 0;
+            foreach (var agent in agentObjectPool)
+            {
+                if (number < numberOfCycles)
+                {
+                    if (!agent.activeInHierarchy)
+                    {
+                        foreach (var deadParticle in spawnNpcParticles) // npc ölüm particle effect
+                        {
+                            if (!deadParticle.activeInHierarchy)
+                            {                                
+                                deadParticle.SetActive(true);
+                                deadParticle.transform.position = position.transform.position;
+                                deadParticle.GetComponent<ParticleSystem>().Play();
+                                break;
+                            }
+                        }
 
-        public static void Cikarma(int intData, List<GameObject> agentObjectPool)
+                        agent.transform.position = position.transform.position;
+                        agent.SetActive(true);
+                        number++;
+                    }
+                }
+                else
+                {
+                    number = 0;
+                    break;
+                }
+            }
+            GameManager.currentSpawnCount *= intData;
+        }
+
+        public static void Cikarma(int intData, List<GameObject> agentObjectPool, List<GameObject> deadNpcParticles)
         {            
             if (GameManager.currentSpawnCount < intData)
             {
-                foreach (var agent in agentObjectPool)
+                foreach (var agent in agentObjectPool) // npc klonlarý
                 {
+                    foreach (var deadParticle in deadNpcParticles) // npc ölüm particle effect
+                    {
+                        if (!deadParticle.activeInHierarchy)
+                        {
+                            Vector3 pos = new(agent.transform.position.x, 0.23f, agent.transform.position.z);
+
+                            deadParticle.SetActive(true);
+                            deadParticle.transform.position = pos;
+                            deadParticle.GetComponent<ParticleSystem>().Play();
+                            break;
+                        }
+                    }
+
                     agent.transform.position = Vector3.zero;
                     agent.SetActive(false);
                 }
@@ -53,6 +117,19 @@ namespace Arithmetich
                     {
                         if (agent.activeInHierarchy)
                         {
+                            foreach (var deadParticle in deadNpcParticles) // npc ölüm particle effect
+                            {
+                                if (!deadParticle.activeInHierarchy)
+                                {
+                                    Vector3 pos = new(agent.transform.position.x, 0.23f, agent.transform.position.z);
+
+                                    deadParticle.SetActive(true);
+                                    deadParticle.transform.position = pos;
+                                    deadParticle.GetComponent<ParticleSystem>().Play();
+                                    break;
+                                }
+                            }
+
                             agent.transform.position = Vector3.zero;
                             agent.SetActive(false);
                             number++;
@@ -68,41 +145,25 @@ namespace Arithmetich
             }
         }
 
-        public static void Carpma(int intData, List<GameObject> agentObjectPool, Transform position)
-        {
-            int numberOfCycles = (GameManager.currentSpawnCount * intData) - GameManager.currentSpawnCount;
-            /*                                      10          *    3    -            =20
-             * Gelen (number) sayýyý mevcut npc (currentSpawnCount) sayýmýz ile çarpýyoruz,
-             * Sonra mevcut npc sayýmýzý çýkarýyoruz,
-             * Bu sayý bize kaç defa döngüye girmemizi veriyor.
-             */
-            int number = 0;
-            foreach (var agent in agentObjectPool)
-            {
-                if (number < numberOfCycles)
-                {
-                    if (!agent.activeInHierarchy)
-                    {
-                        agent.transform.position = position.transform.position;
-                        agent.SetActive(true);
-                        number++;
-                    }
-                }
-                else
-                {
-                    number = 0;
-                    break;
-                }
-            }
-            GameManager.currentSpawnCount *= intData;
-        }
-        public static void Bolme(int intData, List<GameObject> agentObjectPool)
+        public static void Bolme(int intData, List<GameObject> agentObjectPool, List<GameObject> deadNpcParticles)
         {
             // Mevcut sayý bölenden daha küçükse hepsini false yapar.
             if (GameManager.currentSpawnCount <= intData)
             {
                 foreach (var agent in agentObjectPool)
                 {
+                    foreach (var deadParticle in deadNpcParticles) // npc ölüm particle effect
+                    {
+                        if (!deadParticle.activeInHierarchy)
+                        {
+                            Vector3 pos = new(agent.transform.position.x, 0.23f, agent.transform.position.z);
+
+                            deadParticle.SetActive(true);
+                            deadParticle.transform.position = pos;
+                            deadParticle.GetComponent<ParticleSystem>().Play();
+                            break;
+                        }
+                    }
                     agent.transform.position = Vector3.zero;
                     agent.SetActive(false);
                 }
@@ -118,6 +179,19 @@ namespace Arithmetich
                     {
                         if (agent.activeInHierarchy)
                         {
+                            foreach (var deadParticle in deadNpcParticles) // npc ölüm particle effect
+                            {
+                                if (!deadParticle.activeInHierarchy)
+                                {
+                                    Vector3 pos = new(agent.transform.position.x, 0.23f, agent.transform.position.z);
+
+                                    deadParticle.SetActive(true);
+                                    deadParticle.transform.position = pos;
+                                    deadParticle.GetComponent<ParticleSystem>().Play();
+                                    break;
+                                }
+                            }
+
                             agent.transform.position = Vector3.zero;
                             agent.SetActive(false);
                             number++;

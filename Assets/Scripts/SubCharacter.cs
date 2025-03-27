@@ -28,7 +28,10 @@ public class SubCharacter : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
+            Vector3 particlePosition = new (transform.position.x, 0.23f, transform.position.z);
+
             gameObject.SetActive(false);
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeadNpcParticleEffect(particlePosition);
             GameManager.currentSpawnCount--;
             Debug.Log($"Agent sayýsý: {GameManager.currentSpawnCount}");
         }
