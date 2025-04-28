@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,11 +10,6 @@ public class SubCharacter : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         mainCharacterTarget = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().agentTargetPoint; // Main karakteri takip eder.
-    }
-    
-    void Update()
-    {
-        
     }
 
     private void LateUpdate()
@@ -32,6 +25,16 @@ public class SubCharacter : MonoBehaviour
 
             gameObject.SetActive(false);
             GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeadNpcParticleEffect(particlePosition);
+            GameManager.currentSpawnCount--;
+            Debug.Log($"Agent sayýsý: {GameManager.currentSpawnCount}");
+        }
+
+        if (other.CompareTag("Balyoz"))
+        {
+            Vector3 particlePosition = new(transform.position.x, 0.23f, transform.position.z);
+
+            gameObject.SetActive(false);
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeadNpcParticleEffect(particlePosition, true);
             GameManager.currentSpawnCount--;
             Debug.Log($"Agent sayýsý: {GameManager.currentSpawnCount}");
         }

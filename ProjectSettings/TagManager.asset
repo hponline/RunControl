@@ -10,6 +10,9 @@ TagManager:
   - Cikarma
   - Bolme
   - Carpma
+  - Wind
+  - Agent
+  - Balyoz
   layers:
   - Default
   - TransparentFX

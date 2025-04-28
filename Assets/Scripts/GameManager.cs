@@ -5,8 +5,6 @@ using Arithmetich;
 
 public class GameManager : MonoBehaviour
 {
-
-    //public GameObject agentSpawnPoint;
     public GameObject agentTargetPoint;
 
     public static int currentSpawnCount = 1;
@@ -14,23 +12,8 @@ public class GameManager : MonoBehaviour
     public List<GameObject> agentObjectPool;
     public List<GameObject> spawnNpcParticles;
     public List<GameObject> DeadNpcParticles;
+    public List<GameObject> agentBloodEffect;
 
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    foreach (var agent in agentObjectPool)
-        //    {
-        //        if (!agent.activeInHierarchy)
-        //        {
-        //            agent.transform.position = agentSpawnPoint.transform.position;
-        //            agent.SetActive(true);
-        //            currentSpawnCount++;
-        //            break;
-        //        }
-        //    }
-        //}
-    }
 
 
     // NPC SPAWN
@@ -62,7 +45,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Npc Death ParticleEffect
-    public void DeadNpcParticleEffect(Vector3 position)
+    public void DeadNpcParticleEffect(Vector3 position, bool Balyoz = false)
     {
         foreach (var deadParticle in DeadNpcParticles)
         {
@@ -73,6 +56,20 @@ public class GameManager : MonoBehaviour
                 deadParticle.GetComponent<ParticleSystem>().Play();
                 currentSpawnCount--;
                 break;
+            }
+        }
+
+        if (Balyoz)
+        {
+            Vector3 offset = new (position.x, 0.005f, position.z);
+            foreach (var item in agentBloodEffect)
+            {
+                if (!item.activeInHierarchy)
+                {
+                    item.SetActive(true);
+                    item.transform.position = offset;
+                    break;
+                }
             }
         }
     }   
