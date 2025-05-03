@@ -4,12 +4,14 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     NavMeshAgent agent;
+    GameManager gameManager;
     public GameObject playerPos;
     bool isAttack;
 
     private void Start()
     {
-        agent = GetComponent<NavMeshAgent>();    
+        agent = GetComponent<NavMeshAgent>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     public void AnimationTrigger()
@@ -33,8 +35,9 @@ public class Enemy : MonoBehaviour
             Vector3 particlePosition = new(transform.position.x, 0.23f, transform.position.z);
 
             gameObject.SetActive(false);
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeadNpcParticleEffect(particlePosition, false, true);
-            GameManager.currentSpawnCount--;            
+            gameManager.DeadNpcParticleEffect(particlePosition, false, true);
+            gameManager.enemyCount--;
+            //GameManager.currentSpawnCount--;            
         }
     }
 }

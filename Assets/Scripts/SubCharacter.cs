@@ -3,49 +3,46 @@ using UnityEngine.AI;
 
 public class SubCharacter : MonoBehaviour
 {
-    GameObject mainCharacterTarget;
+    GameManager gameManager;
     NavMeshAgent agent;
-
+    public Transform agentTargetPoint;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        mainCharacterTarget = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().agentTargetPoint; // Main karakteri takip eder.
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     private void LateUpdate()
     {
-        agent.SetDestination(mainCharacterTarget.transform.position);
+        agent.SetDestination(agentTargetPoint.transform.position);
+    }
+
+    Vector3 NewPosition()
+    {
+        return new Vector3 (transform.position.x, 0.23f, transform.position.z);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            Vector3 particlePosition = new (transform.position.x, 0.23f, transform.position.z);
-
             gameObject.SetActive(false);
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeadNpcParticleEffect(particlePosition);
+            gameManager.DeadNpcParticleEffect(NewPosition());
             GameManager.currentSpawnCount--;
-            Debug.Log($"Agent sayýsý: {GameManager.currentSpawnCount}");
         }
 
         if (other.CompareTag("Balyoz"))
         {
-            Vector3 particlePosition = new(transform.position.x, 0.23f, transform.position.z);
-
             gameObject.SetActive(false);
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeadNpcParticleEffect(particlePosition, true);
+            gameManager.DeadNpcParticleEffect(NewPosition(), true);
             GameManager.currentSpawnCount--;
         }
 
         if (other.CompareTag("EnemyAgent"))
         {
-            Vector3 particlePosition = new(transform.position.x, 0.23f, transform.position.z);
-
             gameObject.SetActive(false);
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeadNpcParticleEffect(particlePosition);
-            GameManager.currentSpawnCount--;
-            Debug.Log($"Agent sayýsý: {GameManager.currentSpawnCount}");
+            gameManager.DeadNpcParticleEffect(NewPosition());
+            GameManager.currentSpawnCount--;            
         }
     }
 }

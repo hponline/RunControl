@@ -9,10 +9,12 @@ public class CharacterController : MonoBehaviour
     [Header("EndGame")]
     public float fightCameraSmooth = 0.15f;
     public bool isEndGame;
+    Camera _camera;
 
     private void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        _camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
     }
 
     private void Update()
@@ -54,13 +56,24 @@ public class CharacterController : MonoBehaviour
         {
             int number = int.Parse(other.name); // Objenin string ismini sayýya çevirir
             gameManager.AgentSpawnManager(other.tag, number, other.transform);
-        }
+        }        
 
         else if (other.CompareTag("EnemyVsTrigger"))
         {
-            GameObject.FindWithTag("MainCamera").GetComponent<Camera>().isEndGame = true;
+            _camera.isEndGame = true;
             isEndGame = true;
             gameManager.EnemyTrigger();
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Direk") || other.CompareTag("Enemy"))
+        {
+            if (transform.position.x > 0)
+                transform.position = new Vector3(transform.position.x - .2f, transform.position.y, transform.position.z);
+            else
+                transform.position = new Vector3(transform.position.x + .2f, transform.position.y, transform.position.z);
         }
     }
 }

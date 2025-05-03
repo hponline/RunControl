@@ -6,9 +6,6 @@ using Arithmetich;
 public class GameManager : MonoBehaviour
 {
     public static int currentSpawnCount = 1;
-    public GameObject player;
-    public GameObject agentTargetPoint;
-
 
     public List<GameObject> agentObjectPool;
     public List<GameObject> spawnNpcParticles;
@@ -16,47 +13,65 @@ public class GameManager : MonoBehaviour
     public List<GameObject> agentBloodEffect;
 
     [Header("Level Variables")]
+    public GameObject player;
     public List<GameObject> enemyAgent;
     public int enemyCount;
     public bool isGameOver;
+    [Tooltip("Son sahneye geldi mi")] bool isEndGame;
+
 
 
     private void Start()
     {
         EnemySpawner();
+
     }
 
-    void FightState()
+    // EndGame'e geldi mi kontrol eder.
+    void GameState()
     {
-        if (currentSpawnCount == 1 || enemyCount == 0)
-        {
-            isGameOver = true;
+        if (isEndGame)
+        {            
+            if (currentSpawnCount <= 1 || enemyCount == 0)
+            {                
+                isGameOver = true;
 
-            foreach (var item in enemyAgent)
-            {
-                if (item.activeInHierarchy)
+                #region Fight
+                foreach (var item in enemyAgent)
                 {
-                    item.GetComponent<Animator>().SetBool("IsAttack", false);
+                    if (item.activeInHierarchy)
+                    {
+                        item.GetComponent<Animator>().SetBool("IsAttack", false);
+                    }
                 }
-            }
 
-            foreach (var item in agentObjectPool)
-            {
-                if (item.activeInHierarchy)
+                foreach (var item in agentObjectPool)
                 {
-                    item.GetComponent<Animator>().SetBool("IsEndGame", false);
+                    if (item.activeInHierarchy)
+                    {
+                        item.GetComponent<Animator>().SetBool("IsEndGame", false);
+                    }
                 }
-            }
 
-            player.GetComponent<Animator>().SetBool("IsEndGame", false);
+                player.GetComponent<Animator>().SetBool("IsEndGame", false);
 
-            if (currentSpawnCount < enemyCount || currentSpawnCount == enemyCount)
-            {
-                Debug.Log("Lose");
+                if (currentSpawnCount < enemyCount || currentSpawnCount == enemyCount)
+                {
+                    Debug.Log("<color==red> Lose </color>");
+                }
+                else
+                    Debug.Log("<color==green> Win </color>");
+
+                #endregion
             }
-            else
-                Debug.Log("Win");
-        }
+            ShowInfo();
+        }        
+    }
+
+    public void ShowInfo()
+    {
+        Debug.Log("Kalan Agent Sayýsý: " + currentSpawnCount);
+        Debug.Log("Kalan Düþman Sayýsý: " + enemyCount);
     }
 
     public void EnemySpawner()
@@ -72,10 +87,10 @@ public class GameManager : MonoBehaviour
         foreach (var item in enemyAgent)
         {
             if (item.activeInHierarchy)
-            {
                 item.GetComponent<Enemy>().AnimationTrigger();
-            }
         }
+        isEndGame = true;
+        GameState();
     }
 
 
@@ -97,14 +112,13 @@ public class GameManager : MonoBehaviour
             // Çarpma
             case "Carpma":
                 ArithmeticOperation.Carpma(intData, agentObjectPool, position, spawnNpcParticles);
-                break;         
+                break;
 
             // Bölme
             case "Bolme":
                 ArithmeticOperation.Bolme(intData, agentObjectPool, DeadNpcParticles);
                 break;
         }
-        ShowCurrentSpawnCount();
     }
 
     // Npc Death ParticleEffect
@@ -113,7 +127,7 @@ public class GameManager : MonoBehaviour
         foreach (var deadParticle in DeadNpcParticles)
         {
             if (!deadParticle.activeInHierarchy)
-            {                
+            {
                 deadParticle.SetActive(true);
                 deadParticle.transform.position = position;
                 deadParticle.GetComponent<ParticleSystem>().Play();
@@ -127,7 +141,7 @@ public class GameManager : MonoBehaviour
 
         if (Balyoz)
         {
-            Vector3 offset = new (position.x, 0.005f, position.z);
+            Vector3 offset = new(position.x, 0.005f, position.z);
             foreach (var item in agentBloodEffect)
             {
                 if (!item.activeInHierarchy)
@@ -140,14 +154,8 @@ public class GameManager : MonoBehaviour
         }
 
         if (!isGameOver)
-            FightState();
+            GameState();
 
-    }   
-
-    public void ShowCurrentSpawnCount()
-    {
-        Debug.Log($"Agent sayýsý: {GameManager.currentSpawnCount}");
     }
-
 
 }

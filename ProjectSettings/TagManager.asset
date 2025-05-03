@@ -15,6 +15,7 @@ TagManager:
   - Balyoz
   - EnemyVsTrigger
   - EnemyAgent
+  - Direk
   layers:
   - Default
   - TransparentFX
