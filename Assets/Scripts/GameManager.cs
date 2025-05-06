@@ -5,7 +5,8 @@ using Arithmetich;
 
 public class GameManager : MonoBehaviour
 {
-    public static int currentSpawnCount = 1;
+    public static GameManager gameManagerInstance;
+    public int currentSpawnCount = 1;
 
     public List<GameObject> agentObjectPool;
     public List<GameObject> spawnNpcParticles;
@@ -19,7 +20,10 @@ public class GameManager : MonoBehaviour
     public bool isGameOver;
     [Tooltip("Son sahneye geldi mi")] bool isEndGame;
 
-
+    private void Awake()
+    {
+        gameManagerInstance = this;
+    }
 
     private void Start()
     {
@@ -64,7 +68,7 @@ public class GameManager : MonoBehaviour
 
                 #endregion
             }
-            ShowInfo();
+            //ShowInfo();
         }        
     }
 

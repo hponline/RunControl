@@ -64,6 +64,12 @@ public class CharacterController : MonoBehaviour
             isEndGame = true;
             gameManager.EnemyTrigger();
         }
+
+        else if (other.CompareTag("FreeNpc"))
+        {
+            GameManager.gameManagerInstance.agentObjectPool.Add(other.gameObject);            
+        }
+
     }
 
     private void OnTriggerStay(Collider other)

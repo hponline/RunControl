@@ -36,8 +36,7 @@ public class Enemy : MonoBehaviour
 
             gameObject.SetActive(false);
             gameManager.DeadNpcParticleEffect(particlePosition, false, true);
-            gameManager.enemyCount--;
-            //GameManager.currentSpawnCount--;            
+            GameManager.gameManagerInstance.enemyCount--;           
         }
     }
 }

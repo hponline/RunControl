@@ -40,11 +40,11 @@ namespace Arithmetich
                     break;
                 }
             }
-            GameManager.currentSpawnCount += intData;            
+            GameManager.gameManagerInstance.currentSpawnCount += intData;            
         }
         public static void Carpma(int intData, List<GameObject> agentObjectPool, Transform position, List<GameObject> spawnNpcParticles)
         {
-            int numberOfCycles = (GameManager.currentSpawnCount * intData) - GameManager.currentSpawnCount;
+            int numberOfCycles = (GameManager.gameManagerInstance.currentSpawnCount * intData) - GameManager.gameManagerInstance.currentSpawnCount;
             /*                                      10          *    3    -            =20
              * Gelen (number) sayýyý mevcut npc (currentSpawnCount) sayýmýz ile çarpýyoruz,
              * Sonra mevcut npc sayýmýzý çýkarýyoruz,
@@ -79,12 +79,12 @@ namespace Arithmetich
                     break;
                 }
             }
-            GameManager.currentSpawnCount *= intData;
+            GameManager.gameManagerInstance.currentSpawnCount *= intData;
         }
 
         public static void Cikarma(int intData, List<GameObject> agentObjectPool, List<GameObject> deadNpcParticles)
         {            
-            if (GameManager.currentSpawnCount < intData)
+            if (GameManager.gameManagerInstance.currentSpawnCount < intData)
             {
                 foreach (var agent in agentObjectPool) // npc klonlarý
                 {
@@ -104,7 +104,7 @@ namespace Arithmetich
                     agent.transform.position = Vector3.zero;
                     agent.SetActive(false);
                 }
-                GameManager.currentSpawnCount = 1; // Main Karakterimiz
+                GameManager.gameManagerInstance.currentSpawnCount = 1; // Main Karakterimiz
             }
             else
             {
@@ -139,14 +139,14 @@ namespace Arithmetich
                         break;
                     }
                 }
-                GameManager.currentSpawnCount -= intData;
+                GameManager.gameManagerInstance.currentSpawnCount -= intData;
             }
         }
 
         public static void Bolme(int intData, List<GameObject> agentObjectPool, List<GameObject> deadNpcParticles)
         {
             // Mevcut sayý bölenden daha küçükse hepsini false yapar.
-            if (GameManager.currentSpawnCount <= intData)
+            if (GameManager.gameManagerInstance.currentSpawnCount <= intData)
             {
                 foreach (var agent in agentObjectPool)
                 {
@@ -165,11 +165,11 @@ namespace Arithmetich
                     agent.transform.position = Vector3.zero;
                     agent.SetActive(false);
                 }
-                GameManager.currentSpawnCount = 1; // Main Karakterimiz
+                GameManager.gameManagerInstance.currentSpawnCount = 1; // Main Karakterimiz
             }
             else
             {
-                int division = GameManager.currentSpawnCount / intData; // Bölme sayýsý kadar döngü
+                int division = GameManager.gameManagerInstance.currentSpawnCount / intData; // Bölme sayýsý kadar döngü
                 int number = 0;
                 foreach (var agent in agentObjectPool)
                 {
@@ -202,21 +202,21 @@ namespace Arithmetich
                     }
                 }
                 // Asal sayý kontrol
-                if (GameManager.currentSpawnCount % intData == 0)
-                    GameManager.currentSpawnCount /= intData;
+                if (GameManager.gameManagerInstance.currentSpawnCount % intData == 0)
+                    GameManager.gameManagerInstance.currentSpawnCount /= intData;
 
-                else if (GameManager.currentSpawnCount % intData == 1)
+                else if (GameManager.gameManagerInstance.currentSpawnCount % intData == 1)
                 {
-                    GameManager.currentSpawnCount /= intData;
-                    GameManager.currentSpawnCount++; 
+                    GameManager.gameManagerInstance.currentSpawnCount /= intData;
+                    GameManager.gameManagerInstance.currentSpawnCount++; 
                     // Burada arttýrma nedenimiz oyun içindeki toplam karakter sayýsýný eþitlemek içindir.
                     // Bunu yapmazsak MainKarakterimiz toplam karakter sayýsýna dahil edilmiyor.
                     // Oyun içinde Fazla/Eksik mevcut karakter sayýsý oluyor.
                 }
-                else if (GameManager.currentSpawnCount % intData == 2)
+                else if (GameManager.gameManagerInstance.currentSpawnCount % intData == 2)
                 {
-                    GameManager.currentSpawnCount /= intData;
-                    GameManager.currentSpawnCount +=2;
+                    GameManager.gameManagerInstance.currentSpawnCount /= intData;
+                    GameManager.gameManagerInstance.currentSpawnCount +=2;
                 }
                 // 3e bölme Hatalý olabilir kontrol et
                 // Bölenler 3e kadar devam eder daha üstü þuanlýk yok.

@@ -19,7 +19,7 @@ public class SubCharacter : MonoBehaviour
 
     Vector3 NewPosition()
     {
-        return new Vector3 (transform.position.x, 0.23f, transform.position.z);
+        return new Vector3(transform.position.x, 0.23f, transform.position.z);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -28,21 +28,26 @@ public class SubCharacter : MonoBehaviour
         {
             gameObject.SetActive(false);
             gameManager.DeadNpcParticleEffect(NewPosition());
-            GameManager.currentSpawnCount--;
+            GameManager.gameManagerInstance.currentSpawnCount--;
         }
 
-        if (other.CompareTag("Balyoz"))
+        else if (other.CompareTag("Balyoz"))
         {
             gameObject.SetActive(false);
             gameManager.DeadNpcParticleEffect(NewPosition(), true);
-            GameManager.currentSpawnCount--;
+            GameManager.gameManagerInstance.currentSpawnCount--;
         }
 
-        if (other.CompareTag("EnemyAgent"))
+        else if (other.CompareTag("EnemyAgent"))
         {
             gameObject.SetActive(false);
             gameManager.DeadNpcParticleEffect(NewPosition());
-            GameManager.currentSpawnCount--;            
+            GameManager.gameManagerInstance.currentSpawnCount--;
+        }
+
+        else if (other.CompareTag("FreeNpc"))
+        {
+            GameManager.gameManagerInstance.agentObjectPool.Add(other.gameObject);            
         }
     }
 }
