@@ -18,13 +18,14 @@ namespace Arithmetich
                 {
                     if (!agent.activeInHierarchy)
                     {
-                        foreach (var deadParticle in spawnNpcParticles) // npc ölüm particle effect
+                        foreach (var spawnParticle in spawnNpcParticles) // npc ölüm particle effect
                         {
-                            if (!deadParticle.activeInHierarchy)
+                            if (!spawnParticle.activeInHierarchy)
                             {
-                                deadParticle.SetActive(true);
-                                deadParticle.transform.position = position.transform.position;
-                                deadParticle.GetComponent<ParticleSystem>().Play();
+                                spawnParticle.SetActive(true);
+                                spawnParticle.transform.position = position.transform.position;
+                                spawnParticle.GetComponent<ParticleSystem>().Play();
+                                spawnParticle.GetComponent<AudioSource>().Play();
                                 break;
                             }
                         }
@@ -57,13 +58,14 @@ namespace Arithmetich
                 {
                     if (!agent.activeInHierarchy)
                     {
-                        foreach (var deadParticle in spawnNpcParticles) // npc ölüm particle effect
+                        foreach (var spawnParticle in spawnNpcParticles) // npc ölüm particle effect
                         {
-                            if (!deadParticle.activeInHierarchy)
-                            {                                
-                                deadParticle.SetActive(true);
-                                deadParticle.transform.position = position.transform.position;
-                                deadParticle.GetComponent<ParticleSystem>().Play();
+                            if (!spawnParticle.activeInHierarchy)
+                            {
+                                spawnParticle.SetActive(true);
+                                spawnParticle.transform.position = position.transform.position;
+                                spawnParticle.GetComponent<ParticleSystem>().Play();
+                                spawnParticle.GetComponent<AudioSource>().Play();
                                 break;
                             }
                         }

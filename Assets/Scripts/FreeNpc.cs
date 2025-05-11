@@ -25,6 +25,7 @@ public class FreeNpc : MonoBehaviour
             {
                 MaterialAndAnimationTrigger();
                 isTrigger = true;
+                GetComponent<AudioSource>().Play(); 
             }            
         }
 

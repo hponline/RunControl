@@ -135,6 +135,7 @@ public class GameManager : MonoBehaviour
                 deadParticle.SetActive(true);
                 deadParticle.transform.position = position;
                 deadParticle.GetComponent<ParticleSystem>().Play();
+                deadParticle.GetComponent<AudioSource>().Play();
                 if (!state)
                     currentSpawnCount--;
                 else
@@ -143,7 +144,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (Balyoz)
+        if (Balyoz) // Balyoz
         {
             Vector3 offset = new(position.x, 0.005f, position.z);
             foreach (var item in agentBloodEffect)

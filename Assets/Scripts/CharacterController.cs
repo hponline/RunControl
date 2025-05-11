@@ -1,8 +1,8 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
-    GameManager gameManager;
     public GameObject fightPlace;
     public float speed = .5f;
 
@@ -11,10 +11,17 @@ public class CharacterController : MonoBehaviour
     public bool isEndGame;
     Camera _camera;
 
+    [Header("UI")]
+    public Slider sliderProgresBar;
+    public GameObject sliderTarget;
+
     private void Start()
     {
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         _camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+
+        // Progres bar
+        float distance = Vector3.Distance(transform.position, sliderTarget.transform.position);
+        sliderProgresBar.maxValue = distance;
     }
 
     private void Update()
@@ -22,9 +29,17 @@ public class CharacterController : MonoBehaviour
         if (isEndGame)
         {
             transform.position = Vector3.Lerp(transform.position, fightPlace.transform.position, fightCameraSmooth);
+            if (sliderProgresBar.value != 0)
+            {
+                sliderProgresBar.value -= .005f;
+            }
         }
         else
         {
+            // Progres bar
+            float distance = Vector3.Distance(transform.position, sliderTarget.transform.position);
+            sliderProgresBar.value = distance;
+
             if (Input.GetKey(KeyCode.Mouse0))
             {
                 if (Input.GetAxis("Mouse X") < 0)
@@ -55,14 +70,14 @@ public class CharacterController : MonoBehaviour
         if (other.CompareTag("Toplama") || other.CompareTag("Cikarma") || other.CompareTag("Carpma") || other.CompareTag("Bolme"))
         {
             int number = int.Parse(other.name); // Objenin string ismini sayýya çevirir
-            gameManager.AgentSpawnManager(other.tag, number, other.transform);
+            GameManager.gameManagerInstance.AgentSpawnManager(other.tag, number, other.transform);
         }        
 
         else if (other.CompareTag("EnemyVsTrigger"))
         {
             _camera.isEndGame = true;
             isEndGame = true;
-            gameManager.EnemyTrigger();
+            GameManager.gameManagerInstance.EnemyTrigger();
         }
 
         else if (other.CompareTag("FreeNpc"))
